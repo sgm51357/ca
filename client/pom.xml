@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<name>AKTIN : CA : Client</name>
+	<packaging>jar</packaging>
+
+	<description>
+	</description>
+
+	<groupId>org.aktin.ca</groupId>
+	<artifactId>ca-client</artifactId>
+	<version>0.1-SNAPSHOT</version>
+
+	<parent>
+		<groupId>org.aktin.ca</groupId>
+		<artifactId>ca</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<build>
+	</build>
+
+	<dependencies>
+		<!-- bouncy castle for generating CSRs -->
+		<!-- TODO maybe lighter version is sufficient -->
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcpkix-jdk15on</artifactId>
+		    <version>1.54</version>
+		</dependency>
+
+		<!-- test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+</project>
