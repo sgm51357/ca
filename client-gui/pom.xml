@@ -1,37 +1,37 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<name>AKTIN : CA : Client GUI</name>
 	<packaging>jar</packaging>
-
+ 
 	<description>
-	Graphical user interface application to create keys and request certification. 
+    Graphical user interface application to create keys and request certification. 
 	</description>
 
 	<groupId>org.aktin.ca</groupId>
 	<artifactId>ca-client-gui</artifactId>
 	<version>0.1-SNAPSHOT</version>
-
 	<parent>
 		<groupId>org.aktin.ca</groupId>
 		<artifactId>ca</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<mainClass>de.dzl.mark.certification.MainApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
-
-	<dependencies>
-		<dependency>
-		    <groupId>org.aktin.ca</groupId>
-		    <artifactId>ca-client</artifactId>
-		    <version>0.1-SNAPSHOT</version>
-		</dependency>
-
-		<!-- test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 </project>
