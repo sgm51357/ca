@@ -8,7 +8,7 @@
 	</description>
 
 	<groupId>org.aktin.ca</groupId>
-	<artifactId>ca-server</artifactId>
+	<artifactId>server</artifactId>
 	<version>0.1-SNAPSHOT</version>
 
 	<parent>
