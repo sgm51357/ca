@@ -1,14 +1,7 @@
 package org.aktin.ca.clientgui;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 
-import org.aktin.ca.client.ClientKeystore;
 import org.aktin.ca.client.RequestHandler;
 
 import javafx.application.Application;
@@ -89,26 +82,6 @@ public class MainApp extends Application {
     protected void confirmRecord()
     {
     	RequestHandler.createCSR(record.getX500Name());
-//    	try {
-//    		KeyStore ks = KeyStore.getInstance("PKCS12");
-//    		ks.load(null, "asdf".toCharArray());
-//    		
-//    		KeyPair kp = ClientKeystore.generateKeyPair();
-//    		X509Certificate cert = ClientKeystore.getCertificateForKeyPair(kp, record.getX500Name());
-//    		ks.setKeyEntry("mykey", kp.getPrivate(), "Passw0rt".toCharArray(), new Certificate[]{cert});
-//    		
-//    		File f = new File("target/keystore.p12");
-//    		f.createNewFile();
-//    		try( 
-//    			FileOutputStream out = new FileOutputStream(f) ){
-//    			ks.store(out, "asdf".toCharArray());
-//    		}
-//    		
-//			System.out.println(ClientKeystore.csrToString(ClientKeystore.generateCSR(kp,record.getX500Name())));
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
     }
 
     

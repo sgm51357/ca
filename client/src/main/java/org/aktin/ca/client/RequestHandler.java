@@ -53,12 +53,12 @@ public class RequestHandler {
      * @return
      * @throws NoSuchAlgorithmException
      */
-	private static KeyPair generateKeyPair() throws NoSuchAlgorithmException{
+	static KeyPair generateKeyPair() throws NoSuchAlgorithmException{
 		KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 		keyPairGenerator.initialize(2048);
 		return keyPairGenerator.generateKeyPair();
 	}
-	private static PKCS10CertificationRequest generateCSR(KeyPair keypair, X500Name x500Name) throws Exception
+	static PKCS10CertificationRequest generateCSR(KeyPair keypair, X500Name x500Name) throws Exception
 	{
 		PKCS10CertificationRequestBuilder p10Builder = new JcaPKCS10CertificationRequestBuilder(
 		    x500Name, keypair.getPublic());
@@ -66,14 +66,14 @@ public class RequestHandler {
 		ContentSigner signer = csBuilder.build(keypair.getPrivate());
 		return p10Builder.build(signer);
 	}
-	private static String csrToString(PKCS10CertificationRequest csr) throws IOException{
+	static String csrToString(PKCS10CertificationRequest csr) throws IOException{
 		StringWriter w = new StringWriter();
 		JcaPEMWriter p = new JcaPEMWriter(w);
 		p.writeObject(csr);
 		p.close();
 		return w.toString();
 	}
-	private static X509Certificate getCertificateSignPublicWithPrivate(KeyPair keyPair, X500Name x500Name) throws CertificateException, OperatorCreationException
+	static X509Certificate getCertificateSignPublicWithPrivate(KeyPair keyPair, X500Name x500Name) throws CertificateException, OperatorCreationException
 	{
 	    X500Name issuer = x500Name;
 	    BigInteger serial = BigInteger.valueOf(1);

@@ -1,0 +1,23 @@
+@startuml
+|lokal|
+:Start;
+if (response.crt ist vorhanden) is (ja) then
+else (nein)
+  if (request.csr ist vorhanden) is (nein) then
+    :Sammeln der Daten per GUI]
+    :Erstellung eines KeyPairs(RSA-2048)]
+    :Signierung des Public Keys mit dem Private Key => Zertifikat]
+    :Anlegen des KeyStores(PKCS12)]
+    :Speichern des Private Keys mit Zertifikat im KeyStore]
+    :Erstellung des Requests]
+  else (ja)
+  endif
+  :Versand der Datei request.csr]
+  |Server|
+  :Zertifizierung]
+  :Rücksendung der Datei response.crt]
+endif
+|lokal|
+:Jubel, Trubel, Heiterkeit]
+:Ende;
+@enduml

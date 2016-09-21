@@ -13,6 +13,7 @@ import java.security.cert.CertificateException;
 public class ClientKeystore {
 	private static char[] keyStorePass = "asdf".toCharArray();
 	private static char[] mykeyPass = "fdsa".toCharArray();
+	private static String storePath = "target/keystore.p12";
 	
 	static void createKeyStore(KeyPair kp, Certificate cert) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException
 	{
@@ -20,7 +21,7 @@ public class ClientKeystore {
 		ks.load(null, keyStorePass);
 		ks.setKeyEntry("mykey", kp.getPrivate(), mykeyPass, new Certificate[]{cert});
 		
-		File f = new File("target/keystore.p12");
+		File f = new File(storePath);
 		f.createNewFile();
 		try( 
 			FileOutputStream out = new FileOutputStream(f) ){
