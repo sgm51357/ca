@@ -25,6 +25,8 @@ public class FormController {
 	@FXML private Label lblCity;
 	@FXML private Label lblFederalState;
 	@FXML private Label lblCountryCode;
+
+	@FXML private Label lblMessage;
 	
 	@FXML protected void createRecord(ActionEvent event) {
         Record record = new Record(txtGivenName.getText(), txtSurName.getText(), txtUnit.getText(), txtOrganization.getText(),
@@ -39,6 +41,10 @@ public class FormController {
 
 	@FXML protected void editRecord(ActionEvent event) {
 		mainApp.switchScene(MainApp.FormScene.CREATE);
+	}
+	
+	@FXML protected void closeForm(ActionEvent event) {
+		mainApp.close();
 	}
 	
 	public void loadRecord(Record record, MainApp.FormScene fs)
@@ -65,12 +71,17 @@ public class FormController {
 				lblCountryCode.setText(record.getCountryCode());
 				lblEmail.setText(record.getEmail());
 				break;
-			case TRUST:
+			case MESSAGE:
 				break;
 		}
 	}
 	
 	public void setMainApp(MainApp mainApp) {
         this.mainApp = mainApp;
+	}
+	
+	public void showMessage(String message)
+	{
+		lblMessage.setText(lblMessage.getText()+"\n\n"+message);
 	}
 }

@@ -9,6 +9,8 @@ public class TestKeystore {
 		Record record = new Record("a","b","c","d","e","f","g","h");
 		MainApp mainApp = new MainApp();
 		mainApp.setRecord(record);
-		mainApp.confirmRecord();
+//		mainApp.confirmRecord();
 	}
+	
+
 }

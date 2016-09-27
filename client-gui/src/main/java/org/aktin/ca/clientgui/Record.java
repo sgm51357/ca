@@ -1,8 +1,6 @@
 package org.aktin.ca.clientgui;
 
 import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.X500NameBuilder;
-import org.bouncycastle.asn1.x500.style.BCStyle;
 
 public class Record {
 	private String givenName;
@@ -36,22 +34,14 @@ public class Record {
 		this.email = email;
 	}
 	
-//	String getX500String()
-//	{
-//		return "CN="+givenName+" "+surName+",OU="+unit+",O="+organization+",L="+city+",ST="+federalState+",C="+countryCode+",EMAIL="+email;
-//	}
+	String getX500String()
+	{
+		return "CN="+givenName+" "+surName+",OU="+unit+",O="+organization+",L="+city+",ST="+federalState+",C="+countryCode+",EmailAddress="+email;
+	}
 	
 	X500Name getX500Name()
 	{
-		X500NameBuilder nameBuilder = new X500NameBuilder(BCStyle.INSTANCE);
-	    nameBuilder.addRDN(BCStyle.CN, givenName+" "+surName);
-	    nameBuilder.addRDN(BCStyle.EmailAddress, email);
-	    nameBuilder.addRDN(BCStyle.O, organization);
-	    nameBuilder.addRDN(BCStyle.OU, unit);
-	    nameBuilder.addRDN(BCStyle.L, city);
-	    nameBuilder.addRDN(BCStyle.C, countryCode);
-	    nameBuilder.addRDN(BCStyle.ST, federalState);
-	    return nameBuilder.build();
+		return new X500Name(getX500String());
 	}
 	
 	public String getGivenName()
