@@ -1,3 +1,0 @@
-V	170927133700Z		100013	unknown	/C=country/ST=state/O=organization/OU=unit/CN=commonName
-V	170928081205Z		100014	unknown	/C=f/ST=d/O=a/OU=f/CN=a s
-V	170928082239Z		100015	unknown	/C=fdas/ST=sdafasd/O=asdfsda/OU=sdafasdf/CN=asdf asdf

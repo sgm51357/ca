@@ -55,7 +55,7 @@ public class MainApp extends Application {
         	}
         	catch (Exception e)
         	{
-        		showError("Fehler beim Öffnen des Keystore!");
+        		showError("Fehler beim Ã–ffnen des Keystore!");
         	}
     		URL urlResponse = getClass().getResource("tls/response.crt");
     		if (urlResponse != null)
@@ -73,7 +73,7 @@ public class MainApp extends Application {
 					String issuerDN = cert.getIssuerDN().getName();
 					showMessage("von:\n"+dnToReadable(issuerDN,false));
 					String subjectDN = cert.getSubjectDN().getName();
-					showMessage("für:\n"+dnToReadable(subjectDN,false));
+					showMessage("fÃ¼r:\n"+dnToReadable(subjectDN,false));
 					
 					//Import
 	    			cm.importCertificationResponse("mykey", "privateKeyPassword".toCharArray(), is);
@@ -96,7 +96,7 @@ public class MainApp extends Application {
 					showMessage("Fehler beim Auslesen der Daten!");
 					e.printStackTrace();
 				}
-				showMessage("Bitte senden Sie diesen an die Omma.\n\nFalls Sie einen neuen Antrag erstellen möchten, löschen Sie die Dateien keystore.p12 und request.csr und starten Sie das Programm erneut.");
+				showMessage("Bitte senden Sie diesen an die Omma.\n\nFalls Sie einen neuen Antrag erstellen mÃ¶chten, lÃ¶schen Sie die Dateien keystore.p12 und request.csr und starten Sie das Programm erneut.");
     		}
     	}
     	else
@@ -238,7 +238,7 @@ public class MainApp extends Application {
 			cm.addCertificate("rootCA", new FileInputStream(getClass().getResource("/gui-test/rootCA.pem").getFile()));
     	}
     	catch (Exception e) {
-    		throw new Exception("Fehler beim Anfügen der drei Zertifikate ca.pem, custodian.pem, datawarehouse.pem!");
+    		throw new Exception("Fehler beim AnfÃ¼gen der drei Zertifikate ca.pem, custodian.pem, datawarehouse.pem!");
     	}
     	try
     	{

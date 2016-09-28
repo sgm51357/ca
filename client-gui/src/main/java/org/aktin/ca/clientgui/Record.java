@@ -9,7 +9,7 @@ public class Record {
 	private String organization;	//Organisation
 	private String city;			//Stadt/Gemeinde
 	private String federalState; 	//Bundesland
-	private String countryCode;		//Ländercode (zwei Buchstaben)
+	private String countryCode;		//LÃ¤ndercode (zwei Buchstaben)
 	private String email;
 	
 	public Record()
