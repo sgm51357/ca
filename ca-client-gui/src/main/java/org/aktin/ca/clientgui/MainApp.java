@@ -57,10 +57,9 @@ public class MainApp extends Application {
         	{
         		showError("Fehler beim Öffnen des Keystore!");
         	}
-    		URL urlResponse = getClass().getResource("tls/response.crt");
-    		if (urlResponse != null)
+    		File fResponse = new File("tls/response.crt");
+    		if (fResponse.exists())
     		{
-        		File fResponse = new File(urlResponse.getFile());
     			showMessage("Es ist ein signiertes Zertifikat mit folgenden Daten vorhanden:");
     			try
     			{
@@ -76,6 +75,7 @@ public class MainApp extends Application {
 					showMessage("für:\n"+dnToReadable(subjectDN,false));
 					
 					//Import
+					is = new FileInputStream(fResponse);
 	    			cm.importCertificationResponse("mykey", "privateKeyPassword".toCharArray(), is);
 	    			FileOutputStream fos = new FileOutputStream("tls/keystore.p12");
 	    			cm.getKeyStore().store(fos, "storePassword".toCharArray());
@@ -84,6 +84,7 @@ public class MainApp extends Application {
     			catch (Exception e)
     			{
     				showError("Fehler beim Import des Zertifikats!");
+    				e.printStackTrace();
     			}
     		}
     		else
@@ -93,7 +94,7 @@ public class MainApp extends Application {
 					String issuerDN = ((X509Certificate)ks.getCertificate("mykey")).getIssuerDN().getName();
 					showMessage(dnToReadable(issuerDN,true));
 				} catch (KeyStoreException e) {
-					showMessage("Fehler beim Auslesen der Daten!");
+					showError("Fehler beim Auslesen der Daten!");
 					e.printStackTrace();
 				}
 				showMessage("Bitte senden Sie diesen an die Omma.\n\nFalls Sie einen neuen Antrag erstellen möchten, löschen Sie die Dateien keystore.p12 und request.csr und starten Sie das Programm erneut.");
