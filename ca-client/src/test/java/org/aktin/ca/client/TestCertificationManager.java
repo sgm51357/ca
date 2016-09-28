@@ -16,7 +16,7 @@ import java.security.cert.CertificateException;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.junit.Test;
 
-public class TestCAKeyStore {
+public class TestCertificationManager {
 	private static char[] storePassword = "storePassword".toCharArray();
 	private static char[] privateKeyPassword = "privateKeyPassword".toCharArray();
 	

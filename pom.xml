@@ -9,9 +9,9 @@
 	<name>AKTIN : CA</name>
 	<description>AKTIN certification authority components</description>
 	<modules>
-		<module>server</module>
-		<module>client</module>
-		<module>client-gui</module>
+		<module>ca-server</module>
+		<module>ca-client</module>
+		<module>ca-client-gui</module>
 	</modules>
 	<scm>
 		<developerConnection>scm:git:git@github.com:aktin/ca.git</developerConnection>
