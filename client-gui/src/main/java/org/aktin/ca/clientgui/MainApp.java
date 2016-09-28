@@ -1,17 +1,21 @@
 package org.aktin.ca.clientgui;
 
-import java.io.FileReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.security.KeyPair;
+import java.io.InputStream;
+import java.net.URL;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.aktin.ca.client.CertificateManager;
-import org.bouncycastle.operator.OperatorCreationException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -39,34 +43,84 @@ public class MainApp extends Application {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Zertifizierung");
 
-//        FileReader fr = new FileReader("mystore.keystore");
-//        KeyStore keystore = 
-//		X509Certificate cert = (X509Certificate)keystore.getCertificate(alias);
-//        try {
-//            KeyStoreManager ksm = new KeyStoreManager("target/mystore.keystore");
-//			ksm.load("asdf");
-//			if (ksm.hasKeyPair("mykey", "fdsa"))
-//			{
-//				showMessage("Es wurde bereits ein Zertifikatsantrag erstellt. Bitte senden Sie diesen an die Omma.");
-//			}
-//		} catch (KeyStoreException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (NoSuchAlgorithmException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (CertificateException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (UnrecoverableKeyException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-        switchScene(FormScene.CREATE);
+    	File fKeyStore = new File("tls/keystore.p12");
+    	if (fKeyStore.exists())
+    	{
+    		KeyStore ks = null;
+        	try
+        	{
+				FileInputStream fis = new FileInputStream(fKeyStore);
+				ks = KeyStore.getInstance("PKCS12");
+				ks.load(fis, "storePassword".toCharArray());
+        	}
+        	catch (Exception e)
+        	{
+        		showError("Fehler beim Öffnen des Keystore!");
+        	}
+    		URL urlResponse = getClass().getResource("tls/response.crt");
+    		if (urlResponse != null)
+    		{
+        		File fResponse = new File(urlResponse.getFile());
+    			showMessage("Es ist ein signiertes Zertifikat mit folgenden Daten vorhanden:");
+    			try
+    			{
+	    			CertificateManager cm = new CertificateManager(ks);
+	    			InputStream is = new FileInputStream(fResponse);
+	    			
+	    			//Anzeige der Inhalte
+					CertificateFactory cf = CertificateFactory.getInstance("X.509");		
+					X509Certificate cert = (X509Certificate) cf.generateCertificate(is);
+					String issuerDN = cert.getIssuerDN().getName();
+					showMessage("von:\n"+dnToReadable(issuerDN,false));
+					String subjectDN = cert.getSubjectDN().getName();
+					showMessage("für:\n"+dnToReadable(subjectDN,false));
+					
+					//Import
+	    			cm.importCertificationResponse("mykey", "privateKeyPassword".toCharArray(), is);
+	    			FileOutputStream fos = new FileOutputStream("tls/keystore.p12");
+	    			cm.getKeyStore().store(fos, "storePassword".toCharArray());
+    				showSuccess("Das Zertifikat wurde erfolgreich importiert.");
+    			}
+    			catch (Exception e)
+    			{
+    				showError("Fehler beim Import des Zertifikats!");
+    			}
+    		}
+    		else
+    		{
+				showMessage("Es wurde bereits ein Zertifikatsantrag mit fologenden Daten erstellt:");
+				try {
+					String issuerDN = ((X509Certificate)ks.getCertificate("mykey")).getIssuerDN().getName();
+					showMessage(dnToReadable(issuerDN,true));
+				} catch (KeyStoreException e) {
+					showMessage("Fehler beim Auslesen der Daten!");
+					e.printStackTrace();
+				}
+				showMessage("Bitte senden Sie diesen an die Omma.\n\nFalls Sie einen neuen Antrag erstellen möchten, löschen Sie die Dateien keystore.p12 und request.csr und starten Sie das Programm erneut.");
+    		}
+    	}
+    	else
+    	{
+        	//noch kein KeyStore angelegt
+            switchScene(FormScene.CREATE);
+        }
+
         primaryStage.show();
+    }
+    
+    private String dnToReadable(String s, boolean reverse)
+    {
+    	List<String> list = Arrays.asList(s.split(", "));
+    	if (reverse) Collections.reverse(list);
+    	s = String.join(",   ", list);
+    	s = s.replaceAll("EMAILADDRESS=", "E-Mail: ");
+    	s = s.replaceAll("O=", "Organisation: ");
+    	s = s.replaceAll("OU=", "Organisationseinheit: ");
+    	s = s.replaceAll("C=", "Land: ");
+    	s = s.replaceAll("CN=", "Name: ");
+    	s = s.replaceAll("ST=", "Bundesland: ");
+    	s = s.replaceAll("L=", "Stadt: ");    	
+    	return s;
     }
 
     Stage getPrimaryStage() {
@@ -86,6 +140,17 @@ public class MainApp extends Application {
     {
     	switchScene(FormScene.MESSAGE);
     	controller.showMessage(message);
+    }
+    
+    void showError(String message)
+    {
+    	showMessage(message);
+    	controller.error();
+    }
+    
+    void showSuccess(String message)
+    {
+    	showMessage(message);
     }
     
     void switchScene(FormScene fs)
@@ -134,36 +199,63 @@ public class MainApp extends Application {
     
     protected void confirmRecord()
     {
-//    	KeyPair kp;
-//		try {
-//			kp = CertificateManager.generateKeyPair();
-//	    	KeyStoreManager ksm = new KeyStoreManager("target/mystore.keystore");
-//			ksm.load("asdf");
-//			Certificate cert = CertificateManager.getCertificateSignPublicWithPrivate(kp, record.getX500String());
-//			ksm.putKeyPair(kp, cert, "mykey", "fdsa");
-//			CertificateManager.generateCSR(kp, record.getX500Name(), "target/request.csr");
-//		} catch (NoSuchAlgorithmException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (KeyStoreException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (CertificateException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (OperatorCreationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		showMessage("Es wurde ein Zertifikatsantrag erstellt. Bitte senden Sie diesen an die Omma.");
-		showMessage("eieiei");
+    	try {
+			createRequest();
+			showSuccess("Es wurde ein Zertifikatsantrag erstellt. Bitte senden Sie diesen an die Omma.");
+		} catch (Exception e) {
+			showMessage(e.getMessage());
+			e.printStackTrace();
+		}
     }
-
     
+    protected void createRequest() throws Exception
+    {
+    	CertificateManager cm = null;
+    	try
+    	{
+			KeyStore ks = KeyStore.getInstance("PKCS12");
+			ks.load(null, "storePassword".toCharArray());	
+			cm = new CertificateManager(ks);
+    	}
+    	catch (Exception e) {
+    		throw new Exception("Fehler beim Anlegen des KeyStores!");
+    	}
+    	
+    	try
+    	{
+			cm.addKeyPair("mykey", "privateKeyPassword".toCharArray(), record.getGivenName()+" "+record.getSurName(), 
+					record.getUnit(), record.getOrganization(), record.getCity(), record.getFederalState(),
+					record.getCountryCode(), record.getEmail());
+    	}
+    	catch (Exception e) {
+    		throw new Exception("Fehler beim Erstellen des KeyPairs!");
+    	}
+    	try
+    	{
+//			cm.addCertificate("ca", new FileInputStream(getClass().getResource("/ca.pem").getFile()));
+//			cm.addCertificate("custodian", new FileInputStream(getClass().getResource("/custodian.pem").getFile()));
+//			cm.addCertificate("datawarehouse", new FileInputStream(getClass().getResource("/datawarehouse.pem").getFile()));
+			cm.addCertificate("rootCA", new FileInputStream(getClass().getResource("/gui-test/rootCA.pem").getFile()));
+    	}
+    	catch (Exception e) {
+    		throw new Exception("Fehler beim Anfügen der drei Zertifikate ca.pem, custodian.pem, datawarehouse.pem!");
+    	}
+    	try
+    	{
+			FileWriter writer = new FileWriter("tls/request.csr");
+			cm.writeCertificationRequest("mykey", "privateKeyPassword".toCharArray(), writer);
+			writer.flush();
+    	}
+    	catch (Exception e) {
+    		throw new Exception("Fehler beim Erstellen des Requests!");
+    	}
+    	try
+    	{
+			FileOutputStream fos = new FileOutputStream("tls/keystore.p12");
+			cm.getKeyStore().store(fos, "storePassword".toCharArray());
+    	} 
+    	catch (Exception e) {
+    		throw new Exception("Fehler beim Schreiben des KeyStores!");
+    	}
+    }    
 }

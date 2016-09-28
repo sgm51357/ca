@@ -4,6 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 public class FormController {
 	private MainApp mainApp;
@@ -82,6 +88,17 @@ public class FormController {
 	
 	public void showMessage(String message)
 	{
-		lblMessage.setText(lblMessage.getText()+"\n\n"+message);
+		if (lblMessage.getText().isEmpty()) lblMessage.setText(message);
+		else lblMessage.setText(lblMessage.getText()+"\n\n"+message);		
+	}
+	
+	public void error()
+	{
+		lblMessage.setBorder(new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
+	}
+	
+	public void success()
+	{
+		lblMessage.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(2))));
 	}
 }
