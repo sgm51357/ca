@@ -233,10 +233,13 @@ public class MainApp extends Application {
     	}
     	try
     	{
+			cm.addCertificate("ca", new FileInputStream("tls/ca.pem"));
+			cm.addCertificate("custodian", new FileInputStream("tls/custodian.pem"));
+			cm.addCertificate("datawarehouse", new FileInputStream("tls/datawarehouse.pem"));
 //			cm.addCertificate("ca", new FileInputStream(getClass().getResource("/ca.pem").getFile()));
 //			cm.addCertificate("custodian", new FileInputStream(getClass().getResource("/custodian.pem").getFile()));
 //			cm.addCertificate("datawarehouse", new FileInputStream(getClass().getResource("/datawarehouse.pem").getFile()));
-			cm.addCertificate("rootCA", new FileInputStream(getClass().getResource("/gui-test/rootCA.pem").getFile()));
+//			cm.addCertificate("rootCA", new FileInputStream(getClass().getResource("/gui-test/rootCA.pem").getFile()));
     	}
     	catch (Exception e) {
     		throw new Exception("Fehler beim Anfügen der drei Zertifikate ca.pem, custodian.pem, datawarehouse.pem!");
